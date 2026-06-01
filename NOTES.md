@@ -8,3 +8,7 @@
 - Bruk hvis hensiktsmessig.
 
 
+### Handler vs. Endpoint
+
+- Handler   => Selve funksjonen som håndterer forespørselen
+- Endpoint  => Eks. `/users?limit=10`
