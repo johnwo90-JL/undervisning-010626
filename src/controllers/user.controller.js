@@ -1,5 +1,5 @@
 
-const users = [{
+export const users = [{
     email: "foo@bar.com",
     password: "abc123",
     lastLogin: Date.now(),
@@ -7,7 +7,7 @@ const users = [{
     email: "foo2@bar.com",
     password: "abc1234",
     lastLogin: Date.now(),
-}]
+}];
 
 export const userController = {
     /**
