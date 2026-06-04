@@ -23,3 +23,17 @@
         endpoint    -> `/world`
     i.e. endpoint = `/hello/world`
     ```
+
+
+## Testing
+
+
+## Middleware
+
+MW er "en handler" som enten utfører validering eller transformasjon av data.
+
+Forespørsel fra klient mot `/users` -> Express -> Router? -> middlewares? -> handler?
+
+MW kan tilegnes endepunkt, router eller app.
+
+Forespørsel fra klient mot `/users` -> Express (m/ middlewares!) -> Router? -> middlewares? -> handler?
