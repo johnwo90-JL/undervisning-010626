@@ -1,8 +1,9 @@
 
-import express from "express";
+import express, { json } from "express";
 
 // Routers
 import { rootRouter } from "./router/root.router.js";
+import { userRouter } from "./router/user.router.js";
 
 
 const app = express();
@@ -13,8 +14,10 @@ const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 
 // Setup - Plugins, middlewares, endepunkt/handler, sette opp lytting
 
-
 // Plugins
+
+app.use(json());
+// app.use();
 
 
 // Middlewares
@@ -22,9 +25,9 @@ const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 
 // Endpoints/Handlers
 
-
 // Endpoint: `/`
-app.use("/", rootRouter);
+app.use("/users", userRouter); 
+app.use("/", rootRouter); // exampleMiddleware -> /[users, auth, ...]
 
 
 // Lytting (Listening)
