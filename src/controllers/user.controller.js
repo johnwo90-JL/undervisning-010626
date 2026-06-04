@@ -14,7 +14,7 @@ export const userController = {
      * @param {import("express").Request} req Request
      * @param {import("express").Response} res Response
      */
-    "/": (req, res) => {
+    "/": (req, res) => { 
         res.json(users); // TODO: Respond with a list of all active users
     },
     /**
@@ -24,12 +24,5 @@ export const userController = {
     "/active": (req, res) => {
         res.json(users); // TODO: Respond with a list of all active users
     },
-    // "/create": (req, res) => {
-    //     const requestBody = req.body;
-
-    //     console.log(requestBody);
-
-    //     res.json({}); // TODO: Respond with a list of all active users
-    // },
 }
 
