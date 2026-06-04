@@ -6,7 +6,7 @@ import { rootRouter } from "./router/root.router.js";
 import { userRouter } from "./router/user.router.js";
 
 
-const app = express();
+export const app = express();
 
 const PORT = 3000;
 const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
@@ -32,12 +32,16 @@ app.use("/", rootRouter); // exampleMiddleware -> /[users, auth, ...]
 
 // Lytting (Listening)
 
-app.listen(PORT, HOST, (err) => {
-    if (err) {
-        console.error("======= FATAL ERROR =======");
-        console.error(err);
-        process.exit(1);
-    }
+console.log(process.env.NODE_ENV);
 
-    console.log(`Server listening at ${HOST}:${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+    app.listen(PORT, HOST, (err) => {
+        if (err) {
+            console.error("======= FATAL ERROR =======");
+            console.error(err);
+            process.exit(1);
+        }
+
+        console.log(`Server listening at ${HOST}:${PORT}`);
+    });
+}
