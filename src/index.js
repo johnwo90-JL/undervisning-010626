@@ -32,9 +32,8 @@ app.use("/", rootRouter); // exampleMiddleware -> /[users, auth, ...]
 
 // Lytting (Listening)
 
-console.log(process.env.NODE_ENV);
-
 if (process.env.NODE_ENV !== "test") {
+    console.log("Starting server...");
     app.listen(PORT, HOST, (err) => {
         if (err) {
             console.error("======= FATAL ERROR =======");
