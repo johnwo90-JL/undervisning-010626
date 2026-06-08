@@ -8,7 +8,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/index.js",
-    "dev": "cross-env NODE_ENV=development node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
     "test": "cross-env NODE_ENV=test vitest"
   },
   "dependencies": {
@@ -16,7 +16,9 @@
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
+    "nodemon": "^3.1.14",
     "supertest": "^7.2.2",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "zod": "^4.4.3"
   }
 }
