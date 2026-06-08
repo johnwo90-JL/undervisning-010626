@@ -6,5 +6,8 @@ import { uuidv4 } from "../utils/uuid.util.js";
  * @param {import("express").Response} res Response
  */
 export function useRequestId(req, res, next) {
-    req.id = null; // TODO Add actual request ID
+    req.id = uuidv4();
+    res.setHeader("X-Request-Id", req.id);
+    
+    next();
 }

@@ -4,6 +4,7 @@ import express, { json } from "express";
 // Routers
 import { rootRouter } from "./router/root.router.js";
 import { userRouter } from "./router/user.router.js";
+import { useRequestId } from "./middlewares/use-request-id.middleware.js";
 
 
 export const app = express();
@@ -17,7 +18,7 @@ const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 // Plugins
 
 app.use(json());
-// app.use();
+app.use(useRequestId);
 
 
 // Middlewares
