@@ -54,3 +54,229 @@ Forespørsel fra klient mot `/users` -> Express (m/ middlewares!) -> Router? -> 
 ## Inndatavalidering
 
 - Forsikre at data som vi får inn er av forventet form.
+
+## REST - Representational State Transfer
+
+- Løst koblet
+- API -> DB
+- Skalerbar
+- Simplistisk
+- Overførbarhet
+- Utvides lett
+
+
+## RESTful - Retter seg etter REST arkitekturisk stil
+
+Enhver overføring; dvs. forespørsel og svar, skal inneholde all informasjon som gjør det mulig å repetere forespørselsen.
+
+## SOAP - Simple Object Access Protocol
+
+Hvis du kan, unngå. /POP
+
+## CRUD vs. HTTP Methods
+
+### CRUD
+
+- C - Create
+- R - Read
+- U - Update (/upsert)
+- D - Delete
+
+### HTTP Metoder
+
+- GET       - Read
+- POST      - Create 
+- PUT       - Create & Update
+- PATCH     - Update
+- DELETE    - Delete
+
+#### GET
+
+Hent/les data.
+
+Eksempel:
+
+Vi sender følgende data til server:
+
+`GET /users/abcdef0123456789`:
+```json
+[no body]
+```
+
+`Response`:
+```json
+{
+    success: true,
+    meta: {
+        _self: "http://localhost:3000/users/abcdef0123456789",
+        _next: "http://localhost:3000/users/abcdef0123456710",
+         _index: "http://localhost:3000/users"
+    }
+    data: {
+        "id": "abcdef0123456789",
+        "username": "Foobar",
+        "password": null,
+        "email": "foo@bar.com"
+    }
+}
+```
+
+#### POST
+
+Opprett ny oppføring av data.
+
+POST oppretter en ny oppføring, *og* oppretter en ny vilkårlig `id` for den nyopprettede oppføringen.
+
+Eksempel:
+
+Vi sender følgende data til server:
+
+`POST /users`:
+```json
+{
+    "username": "Foo",
+    "password": null,
+    "email": "foo@bar.com"
+}
+```
+
+`Response`:
+```json
+{
+    success: true,
+    _insertedData: {
+        "id": "abcdef0123456789",
+        "username": "Foo",
+        "password": null,
+        "email": "foo@bar.com"
+    }
+}
+```
+
+Ved duplikat:
+
+- Skyld **alltid** på klienten! Gi `400`-status / `409`- status.
+
+
+#### PUT
+
+Upsert data.
+
+UPSERT -> Update or insert.
+
+Update -> Erstatt data i en eksisterende oppføring.
+Insert -> Sett inn ny data, *hvis gyldig*.
+
+`PUT /users/abcdef0123456789`:
+```json
+{
+    "username": "Foo",
+    "password": null,
+    "email": "foo@bar.com"
+}
+```
+
+`Response`:
+```json
+{
+    success: true,
+    _insertedData: {
+        "username": "Foo",
+        "password": null,
+        "email": "foo@bar.com"
+    }
+}
+```
+
+Eksempel 2:
+
+`PUT /users`:
+```json
+{
+    "username": "Foo",
+    "password": null,
+    "email": "foo@bar.com"
+}
+```
+
+`Response`:
+```json
+{
+    success: false,
+    error: {
+        code: 400
+        message: "Missing field `id`."
+    }
+}
+```
+
+#### PATCH
+
+Oppdater eksisterende data.
+
+Eksempel:
+
+Vi sender følgende data til server:
+
+`PATCH /users/abcdef0123456789`:
+```json
+{
+    "username": "Foobar",
+}
+```
+
+`Response`:
+```json
+{
+    success: true,
+    _updatedData: {
+        "id": "abcdef0123456789",
+        "username": "Foobar",
+        "password": null,
+        "email": "foo@bar.com"
+    }
+}
+```
+
+Hvis et endepunkt / en funksjon, e.l. gir det samme resultatet for den samme inndataen, hva kalles den type endepunkt/funksjon?
+
+*Idempotent.*
+
+#### DELETE
+
+Sletter (eller markerer som slettet) data.
+
+Eksempel:
+
+Vi sender følgende data til server:
+
+`DELETE /users/abcdef0123456789`:
+```json
+[no body]
+```
+
+`Response`:
+```json
+{
+    success: true,
+    _deletedData: {
+        "id": "abcdef0123456789",
+        "username": "Foobar",
+        "password": null,
+        "email": "foo@bar.com"
+    }
+}
+```
+
+*eller*:
+
+`status 204`
+
+--- 
+
+- HEAD
+- OPTIONS
+- TRACE
+
+---
+
