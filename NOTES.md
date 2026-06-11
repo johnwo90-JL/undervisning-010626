@@ -318,3 +318,14 @@ Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *pay
 
 
 
+
+
+
+
+
+## Misc
+
+AuthN           -           AuthZ
+Authentication              Authorization
+
+
