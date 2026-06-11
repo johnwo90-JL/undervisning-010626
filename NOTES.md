@@ -280,3 +280,41 @@ Vi sender følgende data til server:
 
 ---
 
+## Autentisering og passordhashing
+
+### BASIC (autentisering)
+
+#### Hovedpunkter
+
+- Basic Authentication
+- Innebygd i nettlesere
+- Simpel
+
+#### Hvordan ser det ut?
+
+BASIC baserer at man sender brukernavn og passord som base64 til server.
+Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *payload*
+
+#### Egenskaper
+
+- Flyktig autentisering, dvs. at man må autentisere seg for hver forespørsel man utfører.
+- Kan oppgraderes til en vedvarende autentiseringsstrategi (JWT, session-cookie, e.l.).
+- Enkelt å implementere.
+
+### JWT
+
+#### Hovedpunkter
+
+- Er en type "token", dvs. noe som holder informasjon, helt eller delvis, som brukes, i dette tilfellet, som grunnlag for å bekrefte at en bruker er innlogget.
+- Oppbevares hos klienten (httpOnly-secure-cookie).
+- Signert informasjon gjør det nærmest umulig å manipulere informasjonen i "token". *Anti-tampering*
+
+#### Hvordan ser det ut?
+
+[JWT.io](https://www.jwt.io/) har en flott visuell framstilling av JWT-tokens.
+
+### bcrypt
+
+
+
+
