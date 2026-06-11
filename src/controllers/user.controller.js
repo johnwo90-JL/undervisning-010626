@@ -3,12 +3,12 @@ import { UserSchema } from "../schema/user.schema.js";
 export const users = [{
     id: "abc123",
     email: "foo@bar.com",
-    password: "abc123",
+    password: "$2b$12$GgS1hQuNY42BYunHxYjfCeQ6PHQ5dsMeSEJTYLn9N2vhOKAp7RZke",
     lastLogin: Date.now(),
 }, {
     id: "foobar123",
     email: "foo2@bar.com",
-    password: "abc1234",
+    password: "$2b$12$7oSp9aFce4nZf8PJwQEpdu0c8.ZXstvnEXvd9BJZ/G3OGnAuwxoMC",
     lastLogin: Date.now(),
 }];
 
