@@ -5,6 +5,7 @@ import express, { json } from "express";
 import { rootRouter } from "./router/root.router.js";
 import { userRouter } from "./router/user.router.js";
 import { useRequestId } from "./middlewares/use-request-id.middleware.js";
+import { authnRouter } from "./router/authN.router.js";
 
 
 export const app = express();
@@ -27,7 +28,8 @@ app.use(useRequestId);
 // Endpoints/Handlers
 
 // Endpoint: `/`
-app.use("/users", userRouter); 
+app.use("/users", userRouter);
+app.use("/auth", authnRouter);
 app.use("/", rootRouter); // exampleMiddleware -> /[users, auth, ...]
 
 
