@@ -22,3 +22,14 @@ console.log("Sjekker om passord/brukernavn er gyldig,")
 console.log("sender respons");
 
 console.log(atob("eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0"));
+
+
+
+
+const isInProd = process.env.NODE_ENV.startsWith("prod");
+const protocol = isInProd ? "https" : "http";
+const domain = isInProd ? "app.example.com" : "127.0.0.1";
+const resetToken = "abcdef0123456789";
+
+const resetUrl = `${protocol}://${domain}/auth/resetPassword?resetToken=${resetToken}`;
+console.log(resetUrl);
