@@ -313,19 +313,11 @@ Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *pay
 
 [JWT.io](https://www.jwt.io/) har en flott visuell framstilling av JWT-tokens.
 
-### bcrypt
 
+## DB relatert
 
+### Biblioteker
 
-
-
-
-
-
-
-## Misc
-
-AuthN           -           AuthZ
-Authentication              Authorization
-
-
+- `sqlite3`
+- `sequelize`
+- `dotenv`
