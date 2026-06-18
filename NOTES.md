@@ -321,3 +321,11 @@ Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *pay
 - `sqlite3`
 - `sequelize`
 - `dotenv`
+
+
+### Seeding
+
+> *"Populating the DB with some stuff first"*
+
+\- Henri B0126
+
