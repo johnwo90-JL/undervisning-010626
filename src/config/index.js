@@ -6,5 +6,3 @@ export const config = {
     env,
     db
 };
-
-console.log(config);
