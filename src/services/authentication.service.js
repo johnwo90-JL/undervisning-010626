@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
-import { users } from "../controllers/user.controller.js";
+import { UserModel } from "../models/user.model.js";
+// import { users } from "../controllers/user.controller.js";
 
 const saltOrRounds = 12;
 
@@ -11,21 +12,38 @@ export async function verifyPassword(password, hash) {
     return bcrypt.compare(password, hash);
 }
 
-export function verifyUser(email) {
-    return users.filter(e => e.email === email).length === 1;
-    let foo = saltOrRounds;
+export async function verifyUserExists(email) {
+    return (await UserModel.findAndCountAll({
+        where: {
+            email
+        }
+    })).count === 1;
 }
 
-export function getUser(email) {
-    return users.filter(e => e.email === email)[0] ?? null;
+export async function getUser(email) {
+    return (await UserModel.findOne({
+        where: {
+            email
+        }
+    }));
 }
 
 export async function login(email, password) {
-    const user = getUser(email);
+    const user = await getUser(email);
 
     if (user === null) {
-        return false;
+        return {
+            success: true,
+            verified: false,
+            user: null
+        };
     }
 
-    return verifyPassword(password, user.password);
+    const verified = await verifyPassword(password, user.password);
+
+    return { 
+        success: true,
+        verified,
+        user,
+    }
 }

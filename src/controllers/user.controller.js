@@ -1,20 +1,21 @@
+import { UserModel } from "../models/user.model.js";
 import { UserSchema } from "../schema/user.schema.js";
 
-export const users = [{
-    id: "abc123",
-    email: "foo@bar.com",
-    password: "$2b$12$GgS1hQuNY42BYunHxYjfCeQ6PHQ5dsMeSEJTYLn9N2vhOKAp7RZke",
-    lastLogin: Date.now(),
-}, {
-    id: "foobar123",
-    email: "foo2@bar.com",
-    password: "$2b$12$7oSp9aFce4nZf8PJwQEpdu0c8.ZXstvnEXvd9BJZ/G3OGnAuwxoMC",
-    lastLogin: Date.now(),
-}];
+// export const users = [{
+//     id: "abc123",
+//     email: "foo@bar.com",
+//     password: "$2b$12$GgS1hQuNY42BYunHxYjfCeQ6PHQ5dsMeSEJTYLn9N2vhOKAp7RZke",
+//     lastLogin: Date.now(),
+// }, {
+//     id: "foobar123",
+//     email: "foo2@bar.com",
+//     password: "$2b$12$7oSp9aFce4nZf8PJwQEpdu0c8.ZXstvnEXvd9BJZ/G3OGnAuwxoMC",
+//     lastLogin: Date.now(),
+// }];
 
 // Validate user-objects
-users.forEach(user => UserSchema.parse(user));
-console.log(`Validated ${users.length} user objects.`);
+// users.forEach(user => UserSchema.parse(user));
+// console.log(`Validated ${users.length} user objects.`);
 
 export const userController = {
     /**
@@ -30,13 +31,19 @@ export const userController = {
      * @param {import("express").Request} req Request
      * @param {import("express").Response} res Response
      */
-    "[POST]/": (req, res) => {
-        req.parsedBody = UserSchema.parse(req.body);
-        users.push(req.parsedBody);
+    "[POST]/": async (req, res) => {
+        const tba = {
+        ...req.body,
+            lastLogin: Date.now()
+        };
+        req.parsedBody = UserSchema.parse(tba);
+
+        console.log(tba);
+        const result = await UserModel.create();
 
         res.status(201).json({
             success: true,
-            _insertedData: req.parsedBody
+            _insertedData: result
         });
     },
 

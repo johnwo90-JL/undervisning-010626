@@ -329,3 +329,12 @@ Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *pay
 
 \- Henri B0126
 
+## API
+
+### Hva er funksjonen?
+
+Å hente MTG kortpriser fra en datakilde.
+
+**Datakilder:**
+
+- [https://www.cardmarket.com/en/OnePiece/Data](https://www.cardmarket.com/en/OnePiece/Data)

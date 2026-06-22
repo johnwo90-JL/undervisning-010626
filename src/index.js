@@ -18,26 +18,26 @@ import { authnRouter } from "./router/authN.router.js";
 import { Op } from "sequelize";
 
 // Sync Database
-await db.sync();
-UserModel.create({
-    email: "admin@foobar.com",
-    password: "password1234",
-    lastLogin: Date.now()
-});
+// await db.sync();
+// UserModel.create({
+//     email: "admin@foobar.com",
+//     password: "password1234",
+//     lastLogin: Date.now()
+// });
 
-UserModel.create({
-    email: "user@foobar.com",
-    password: "password1234",
-    lastLogin: Date.now()+9000
-});
+// UserModel.create({
+//     email: "user@foobar.com",
+//     password: "password1234",
+//     lastLogin: Date.now()+9000
+// });
 
-(await UserModel.findAll({
-    where: {
-        lastLogin: {
-            [Op.lt]: Date.now()
-        }
-    }
-})).forEach(e => e.destroy()); 
+// (await UserModel.findAll({
+//     where: {
+//         lastLogin: {
+//             [Op.lt]: Date.now()
+//         }
+//     }
+// })).forEach(e => e.destroy()); 
 
 export const app = express();
 

@@ -15,9 +15,11 @@ export const UserModel = db.define("User", {
     password: {
         type: DataTypes.TEXT,
     },
+    role: {
+        type: DataTypes.NUMBER,
+    },
     lastLogin: {
         type: DataTypes.NUMBER,
-        allowNull: false
     }
 });
 

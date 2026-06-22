@@ -1,8 +1,8 @@
-import z from "zod";
+import z, { optional } from "zod";
 
 export const UserSchema = 
     z.object({
-        id: z.string(), // TODO Oppgave, gjør "optional"
+        id: z.string().optional(), // TODO Oppgave, gjør "optional"
         email: z.email(),
         password: z.string(),
         lastLogin: z.coerce.number(),
