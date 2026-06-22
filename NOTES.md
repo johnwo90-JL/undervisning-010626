@@ -338,3 +338,20 @@ Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *pay
 **Datakilder:**
 
 - [https://www.cardmarket.com/en/OnePiece/Data](https://www.cardmarket.com/en/OnePiece/Data)
+
+#### Endepunkter for kortpriser
+
+- `/cards` - Liste over tilgjengelige kortpriser
+- `/cards/:id` - Vise spesifikt kort
+- `/cards/category/:categoryId` - Vise alle kort i en kategori
+- `/cards/:categoryId` - Vise alle kort i en kategori
+
+
+### Sikkerhet
+
+- Helmet
+- Rate-limiting
+
+### Logging
+
+Sikker logging, informativ.
