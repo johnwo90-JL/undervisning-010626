@@ -37,6 +37,25 @@ function sendControllerError(res, error) {
     });
 }
 
+async function sendUserById(userId, res) {
+    const user = await UserModel.findByPk(userId);
+
+    if (user === null) {
+        res.status(404).json({
+            success: false,
+            error: {
+                message: "User not found",
+            },
+        });
+        return;
+    }
+
+    res.json({
+        success: true,
+        data: toUserDto(user),
+    });
+}
+
 export const userController = {
     /**
      * @param {import("express").Request} req Request
@@ -95,22 +114,15 @@ export const userController = {
      * @param {import("express").Response} res Response
      */
     "/:id": async (req, res) => {
-        const user = await UserModel.findByPk(req.params.id);
+        await sendUserById(req.params.id, res);
+    },
 
-        if (user === null) {
-            res.status(404).json({
-                success: false,
-                error: {
-                    message: "User not found",
-                },
-            });
-            return;
-        }
-
-        res.json({
-            success: true,
-            data: toUserDto(user),
-        });
+    /**
+     * @param {import("express").Request} req Request
+     * @param {import("express").Response} res Response
+     */
+    "/me": async (req, res) => {
+        await sendUserById(req.user.id, res);
     },
 
     /**

@@ -6,9 +6,9 @@ import { UserAccessLevel } from "../models/user.model.js";
 export const userRouter = Router();
 
 userRouter.get("/", useAuthorization(UserAccessLevel.ADMIN), userController["/"]);
-userRouter.post("/", userController["[POST]/"]);
+userRouter.post("/", userController["[POST]/"]); // deprecate?
 
 userRouter.get("/active", userController["/active"]);
+userRouter.post("/register", userController["[POST]/"]);
+userRouter.get("/me", useAuthorization(UserAccessLevel.USER), userController["/me"]);
 userRouter.get("/:id", userController["/:id"]);
-
-// TODO: Add routes: POST `/register`, GET `/me`.
