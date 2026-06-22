@@ -15,6 +15,7 @@ import { rootRouter } from "./router/root.router.js";
 import { userRouter } from "./router/user.router.js";
 import { useRequestId } from "./middlewares/use-request-id.middleware.js";
 import { authnRouter } from "./router/authN.router.js";
+import { useAuthentication } from "./middlewares/use-authn.middleware.js";
 import { Op } from "sequelize";
 
 // Sync Database
@@ -50,6 +51,7 @@ const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 
 app.use(json());
 app.use(useRequestId);
+app.use(useAuthentication);
 
 
 // Middlewares
