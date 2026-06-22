@@ -17,6 +17,8 @@ import { useRequestId } from "./middlewares/use-request-id.middleware.js";
 import { authnRouter } from "./router/authN.router.js";
 import { useAuthentication } from "./middlewares/use-authn.middleware.js";
 import { Op } from "sequelize";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 // Sync Database
 // await db.sync();
@@ -48,14 +50,26 @@ const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 // Setup - Plugins, middlewares, endepunkt/handler, sette opp lytting
 
 // Plugins
-
 app.use(json());
-app.use(useRequestId);
-// app.use(useAuthentication);
+
+app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "script-src": ["'self'", "example.com"],
+      },
+    },
+}));
+
+app.use(rateLimit({
+    windowMs: 3000,
+    limit: 3,
+}));
+
 
 
 // Middlewares
-
+app.use(useRequestId);
+app.use(useAuthentication);
 
 // Endpoints/Handlers
 
