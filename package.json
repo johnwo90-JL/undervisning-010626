@@ -13,7 +13,7 @@
     "db:migrate": "sequelize-cli db:migrate",
     "db:migrate:undo": "sequelize-cli db:migrate:undo",
     "db:migrate:status": "sequelize-cli db:migrate:status",
-    "db:migration:from-model": "node scripts/create-migration-from-model.cjs"
+    "db:migration:from-model": "node scripts/create-migration-from-model.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

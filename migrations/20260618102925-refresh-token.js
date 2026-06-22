@@ -14,6 +14,16 @@ export default {
                 unique: true,
                 type: Sequelize.TEXT,
             },
+            userId: {
+                allowNull: false,
+                type: Sequelize.UUID,
+                references: {
+                    model: "Users",
+                    key: "id",
+                },
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE",
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

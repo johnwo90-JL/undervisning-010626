@@ -1,11 +1,13 @@
 "use strict";
 
-module.exports = {
+/** @type {import("sequelize-cli").Migration} */
+export default {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("Users", {
             id: {
                 allowNull: false,
                 primaryKey: true,
+                defaultValue: Sequelize.UUIDV4,
                 type: Sequelize.UUID,
             },
             email: {
@@ -16,6 +18,11 @@ module.exports = {
             password: {
                 allowNull: true,
                 type: Sequelize.TEXT,
+            },
+            role: {
+                allowNull: false,
+                defaultValue: 1,
+                type: Sequelize.BIGINT,
             },
             lastLogin: {
                 allowNull: false,
