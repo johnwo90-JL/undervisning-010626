@@ -51,7 +51,7 @@ const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 
 app.use(json());
 app.use(useRequestId);
-app.use(useAuthentication);
+// app.use(useAuthentication);
 
 
 // Middlewares
