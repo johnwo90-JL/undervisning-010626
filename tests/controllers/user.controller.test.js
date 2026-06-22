@@ -3,7 +3,7 @@ import request from "supertest";
 
 import { app } from "../../src/index.js";
 import { db } from "../../src/providers/db.provider.js";
-import { UserModel } from "../../src/models/user.model.js";
+import { UserAccessLevel, UserModel } from "../../src/models/user.model.js";
 import { RefreshTokenModel } from "../../src/models/refresh-token.model.js";
 import { createAuthToken } from "../../src/services/jwt.service.js";
 import { verifyPassword, hashPassword } from "../../src/services/authentication.service.js";
@@ -12,7 +12,7 @@ async function createUser(overrides = {}) {
     return UserModel.create({
         email: overrides.email ?? "admin@example.com",
         password: overrides.password ?? await hashPassword("secret123"),
-        role: overrides.role ?? 3,
+        role: overrides.role ?? UserAccessLevel.ADMIN,
         lastLogin: overrides.lastLogin ?? Date.now(),
     });
 }
@@ -43,7 +43,7 @@ describe("users API", () => {
         expect(response.body.success).toBe(true);
         expect(response.body.data).toMatchObject({
             email: "new@example.com",
-            role: 1,
+            role: UserAccessLevel.USER,
         });
         expect(response.body.data.id).toBeDefined();
         expect(response.body.data.password).toBeUndefined();
@@ -87,7 +87,7 @@ describe("users API", () => {
     });
 
     it("rejects listing users with an insufficient role", async () => {
-        const user = await createUser({ email: "basic@example.com", role: 1 });
+        const user = await createUser({ email: "basic@example.com", role: UserAccessLevel.USER });
         const token = await createAuthToken(user);
 
         const response = await request(app)
@@ -97,9 +97,9 @@ describe("users API", () => {
         expect(response.statusCode).toBe(403);
     });
 
-    it("lists users for role level 3 tokens", async () => {
-        const admin = await createUser({ email: "admin@example.com", role: 3 });
-        await createUser({ email: "user@example.com", role: 1 });
+    it("lists users for admin tokens", async () => {
+        const admin = await createUser({ email: "admin@example.com", role: UserAccessLevel.ADMIN });
+        await createUser({ email: "user@example.com", role: UserAccessLevel.USER });
         const token = await createAuthToken(admin);
 
         const response = await request(app)
@@ -113,7 +113,7 @@ describe("users API", () => {
     });
 
     it("returns an active user by id", async () => {
-        const user = await createUser({ email: "single@example.com", role: 1 });
+        const user = await createUser({ email: "single@example.com", role: UserAccessLevel.USER });
 
         const response = await request(app).get(`/users/${user.id}`);
 
@@ -129,7 +129,7 @@ describe("users API", () => {
         await createUser({
             email: "login@example.com",
             password: await hashPassword("correct-password"),
-            role: 3,
+            role: UserAccessLevel.ADMIN,
         });
 
         const success = await request(app)

@@ -61,7 +61,6 @@ export const userController = {
         try {
             const parsedBody = UserSchema.parse({
                 ...req.body,
-                role: req.body.role ?? 1,
                 lastLogin: Date.now(),
             });
 
