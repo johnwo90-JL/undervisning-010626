@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { db } from "../providers/db.provider.js";
 import { RefreshTokenModel, associateRefreshToken } from "./refresh-token.model.js";
+import { hashPassword } from "../services/authentication.service.js";
 
 export const UserAccessLevel = Object.freeze({
     NOT_AUTHENTICATED: 0,
@@ -13,6 +14,14 @@ export const UserAccessLevelLabel = Object.freeze({
     [UserAccessLevel.USER]: "User",
     [UserAccessLevel.ADMIN]: "Admin",
 });
+
+const hashPasswordHook = async (user) => {
+    if (!user.changed("password")) {
+        return;
+    }
+
+    user.password = await hashPassword(user.password);
+}
 
 export const UserModel = db.define("User", {
     id: {
@@ -40,7 +49,14 @@ export const UserModel = db.define("User", {
     lastLogin: {
         type: DataTypes.BIGINT,
     }
+}, {
+    hooks: {
+        beforeCreate: hashPasswordHook,
+        beforeUpdate: hashPasswordHook,
+    }
 });
+
+
 
 UserModel.hasMany(RefreshTokenModel, {
     as: "refreshTokens",

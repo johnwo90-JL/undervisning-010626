@@ -122,6 +122,7 @@ export const userController = {
      * @param {import("express").Response} res Response
      */
     "/me": async (req, res) => {
+        console.log("Request.user.id:", req.user.id);
         await sendUserById(req.user.id, res);
     },
 
