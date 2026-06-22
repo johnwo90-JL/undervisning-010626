@@ -1,49 +1,55 @@
+import { ZodError } from "zod";
+
 import { UserModel } from "../models/user.model.js";
 import { UserSchema } from "../schema/user.schema.js";
+import { hashPassword, verifyUserExists } from "../services/authentication.service.js";
 
-// export const users = [{
-//     id: "abc123",
-//     email: "foo@bar.com",
-//     password: "$2b$12$GgS1hQuNY42BYunHxYjfCeQ6PHQ5dsMeSEJTYLn9N2vhOKAp7RZke",
-//     lastLogin: Date.now(),
-// }, {
-//     id: "foobar123",
-//     email: "foo2@bar.com",
-//     password: "$2b$12$7oSp9aFce4nZf8PJwQEpdu0c8.ZXstvnEXvd9BJZ/G3OGnAuwxoMC",
-//     lastLogin: Date.now(),
-// }];
+function toUserDto(user) {
+    const values = user.dataValues ?? user;
 
-// Validate user-objects
-// users.forEach(user => UserSchema.parse(user));
-// console.log(`Validated ${users.length} user objects.`);
+    return {
+        id: values.id,
+        email: values.email,
+        role: values.role,
+        lastLogin: Number(values.lastLogin),
+        createdAt: values.createdAt,
+        updatedAt: values.updatedAt,
+    };
+}
+
+function sendControllerError(res, error) {
+    if (error instanceof ZodError) {
+        res.status(400).json({
+            success: false,
+            error: {
+                message: "Invalid user data",
+                issues: error.issues,
+            },
+        });
+        return;
+    }
+
+    res.status(500).json({
+        success: false,
+        error: {
+            message: "Internal server error",
+        },
+    });
+}
 
 export const userController = {
     /**
      * @param {import("express").Request} req Request
      * @param {import("express").Response} res Response
      */
-    "/": (req, res) => { 
-        res.json(users); // TODO: Respond with a list of all active users
-    },
+    "/": async (_req, res) => {
+        const users = await UserModel.findAll({
+            order: [["createdAt", "ASC"]],
+        });
 
-     // TODO Oppgave, legg til tilfeldig generert `id` i brukerobjektet; forsikre at det ikke opprettes duplikat, basert på e-postadresse.
-    /**
-     * @param {import("express").Request} req Request
-     * @param {import("express").Response} res Response
-     */
-    "[POST]/": async (req, res) => {
-        const tba = {
-        ...req.body,
-            lastLogin: Date.now()
-        };
-        req.parsedBody = UserSchema.parse(tba);
-
-        console.log(tba);
-        const result = await UserModel.create();
-
-        res.status(201).json({
+        res.json({
             success: true,
-            _insertedData: result
+            data: users.map(toUserDto),
         });
     },
 
@@ -51,17 +57,75 @@ export const userController = {
      * @param {import("express").Request} req Request
      * @param {import("express").Response} res Response
      */
-    "/:id": (req, res) => {
-        console.log("Query string[foo]:", req.query.foo);
-        console.log("Body:", req.body);
-        res.json(users.filter(e => e.id === req.params.id));
+    "[POST]/": async (req, res) => {
+        try {
+            const parsedBody = UserSchema.parse({
+                ...req.body,
+                role: req.body.role ?? 1,
+                lastLogin: Date.now(),
+            });
+
+            if (await verifyUserExists(parsedBody.email)) {
+                res.status(409).json({
+                    success: false,
+                    error: {
+                        message: "A user with that email already exists",
+                    },
+                });
+                return;
+            }
+
+            const user = await UserModel.create({
+                email: parsedBody.email,
+                password: await hashPassword(parsedBody.password),
+                role: parsedBody.role,
+                lastLogin: parsedBody.lastLogin,
+            });
+
+            res.status(201).json({
+                success: true,
+                data: toUserDto(user),
+            });
+        } catch (error) {
+            sendControllerError(res, error);
+        }
     },
 
     /**
      * @param {import("express").Request} req Request
      * @param {import("express").Response} res Response
      */
-    "/active": (req, res) => {
-        res.json(users); // TODO: Respond with a list of all active users
+    "/:id": async (req, res) => {
+        const user = await UserModel.findByPk(req.params.id);
+
+        if (user === null) {
+            res.status(404).json({
+                success: false,
+                error: {
+                    message: "User not found",
+                },
+            });
+            return;
+        }
+
+        res.json({
+            success: true,
+            data: toUserDto(user),
+        });
+    },
+
+    /**
+     * @param {import("express").Request} req Request
+     * @param {import("express").Response} res Response
+     */
+    "/active": async (_req, res) => {
+        const users = await UserModel.findAll({
+            order: [["lastLogin", "DESC"]],
+        });
+
+        res.json({
+            success: true,
+            data: users.map(toUserDto),
+        });
     },
 }

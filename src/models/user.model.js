@@ -1,11 +1,12 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes } from "sequelize";
 import { db } from "../providers/db.provider.js";
+import { RefreshTokenModel, associateRefreshToken } from "./refresh-token.model.js";
 
 
 export const UserModel = db.define("User", {
     id: {
         primaryKey: true,
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
     },
     email: {
@@ -16,10 +17,18 @@ export const UserModel = db.define("User", {
         type: DataTypes.TEXT,
     },
     role: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
     },
     lastLogin: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.BIGINT,
     }
 });
 
+UserModel.hasMany(RefreshTokenModel, {
+    as: "refreshTokens",
+    foreignKey: "userId",
+});
+
+associateRefreshToken(UserModel);
