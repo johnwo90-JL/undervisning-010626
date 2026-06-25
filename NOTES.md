@@ -355,3 +355,12 @@ Dette ser slik ut i praksis: `${brukernavn}:${passord}` -> base64-enkoder = *pay
 ### Logging
 
 Sikker logging, informativ.
+
+
+## 4 Problemer enhver utvikler møter
+
+- Brukere
+- Navngivning
+- "Off-by-one"-feil
+
+*There are 10 types of people in the world: Those who understand binary, and those who don't.*
