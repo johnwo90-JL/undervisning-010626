@@ -21,11 +21,19 @@ export const authnController = {
             return;
         }
 
-        const authToken = await createAuthToken(result.user);
+        const authToken = "Bearer " + (await createAuthToken(result.user));
         const refreshToken = await createRefreshToken(authToken);
+
+        console.log("AuthnController - /login", authToken, refreshToken);
 
         res.cookie("X-Refresh-Token", refreshToken, {
             maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: config.env.NODE_ENV === "prod" || config.env.NODE_ENV === "production" || false,
+        });
+
+        res.cookie("X-Auth-Token", authToken, {
+            maxAge: 3 * 60 * 60 * 1000,
             httpOnly: true,
             secure: config.env.NODE_ENV === "prod" || config.env.NODE_ENV === "production" || false,
         });

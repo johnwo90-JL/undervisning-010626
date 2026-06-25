@@ -55,12 +55,13 @@ export async function refreshUserLogin(oldAuthToken, refreshToken) {
     // const user = verifyAuthToken(oldAuthToken); // FEIL: `verify` krever at token er gyldig, `decode` gjør ikke. Dette gjorde at vi aldri kom lengre enn dette siden token som må "refresh"-es alltid vil feile verifisering.
     const user = parseAuthToken(oldAuthToken);
     
-    if (!(await validateRefreshToken(refreshToken, oldAuthToken))) { // FEIL: Manglet `oldAuthToken`
+    if (!(await validateRefreshToken(refreshToken, oldAuthToken))) {
+        console.log("[REFRESH] Refresh token invalid.");
         throw new Error("Refresh token invalid.");
     }
 
     const refreshTokensFromDb = await getRefreshTokenByUser(user.id)
-        .catch(() => { throw new Error("Failed to fetch data from DB."); });
+        .catch(() => { console.log("[REFRESH] Failed fetch."); throw new Error("Failed to fetch data from DB."); });
     
     let success = false;
     for (const token of refreshTokensFromDb) {
@@ -71,14 +72,17 @@ export async function refreshUserLogin(oldAuthToken, refreshToken) {
     }
 
     if (!success) {
+        console.log("[REFRESH] Failed to verify refresh-token authenticity.");
         throw new Error("Failed to verify refresh-token authenticity.");
     }
     console.log("User Object from Token:", user);
 
-    const authToken = createAuthToken({dataValues: {...user}});
+    const authToken = await createAuthToken({dataValues: {...user}});
+
+    console.log("Returning from `refreshUserLogin`");
 
     return {
         authToken,
-        refreshToken: await screateRefreshToken(authToken)
+        refreshToken: await createRefreshToken(authToken)
     }
 }

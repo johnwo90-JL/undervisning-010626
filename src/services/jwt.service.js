@@ -15,9 +15,15 @@ export async function createAuthToken(user) {
     return jwt.sign({
         id: user.dataValues["id"],
         role: user.dataValues["role"],
-    }, config.env.JWT_SECRET);
+    }, config.env.JWT_SECRET, {
+        expiresIn: "3s"
+    });
 }
 
 export function verifyAuthToken(token) {
     return jwt.verify(token, config.env.JWT_SECRET);
+}
+
+export function parseAuthToken(token) {
+    return jwt.decode(token, config.env.JWT_SECRET);
 }
