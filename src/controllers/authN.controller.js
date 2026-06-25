@@ -1,5 +1,7 @@
+import { config } from "../config/index.js";
 import { login } from "../services/authentication.service.js";
 import { createAuthToken } from "../services/jwt.service.js";
+import { createRefreshToken } from "../services/refresh-token.service.js";
 
 
 export const authnController = {
@@ -19,8 +21,15 @@ export const authnController = {
             return;
         }
 
-        const token = await createAuthToken(result.user);
+        const authToken = await createAuthToken(result.user);
+        const refreshToken = await createRefreshToken(authToken);
 
-        res.status(200).json({ success: true, token });
+        res.cookie("X-Refresh-Token", refreshToken, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: config.env.NODE_ENV === "prod" || config.env.NODE_ENV === "production" || false,
+        });
+
+        res.status(200).json({ success: true, authToken });
     }
 }
