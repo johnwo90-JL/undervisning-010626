@@ -17,3 +17,9 @@ export const CardSchema = z.object({
     "avg7-foil": z.number().optional().nullable(),
     "avg30-foil": z.number().optional().nullable(),
 });
+
+
+export const getCardsQuery = z.object({
+    limit: z.coerce.number().min(0),
+    page:  z.coerce.number().min(0),
+})
