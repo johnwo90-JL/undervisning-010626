@@ -16,7 +16,7 @@ export async function createAuthToken(user) {
         id: user.dataValues["id"],
         role: user.dataValues["role"],
     }, config.env.JWT_SECRET, {
-        expiresIn: "3s"
+        expiresIn: config.env.JWT_VALID_FOR
     });
 }
 

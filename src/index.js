@@ -12,7 +12,7 @@ import { UserModel } from "./models/user.model.js";
 
 // Routers
 import { rootRouter } from "./router/root.router.js";
-import { userRouter } from "./router/user.router.js";
+import { usersRouter } from "./router/users.router.js";
 import { useRequestId } from "./middlewares/use-request-id.middleware.js";
 import { authnRouter } from "./router/authN.router.js";
 import { useAuthentication } from "./middlewares/use-authn.middleware.js";
@@ -21,6 +21,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import { RefreshTokenModel } from "./models/refresh-token.model.js";
+import { cardsRouter } from "./router/cards.router.js";
 
 // Sync Database
 // await db.sync();
@@ -50,10 +51,11 @@ const PORT = 3000;
 const HOST = "0.0.0.0"; // "localhost" === "127.0.0.1"
 
 // Setup - Plugins, middlewares, endepunkt/handler, sette opp lytting
-RefreshTokenModel.truncate();
+
 
 // Plugins
 app.use(json());
+
 app.use(helmet({
     contentSecurityPolicy: {
       directives: {
@@ -61,6 +63,7 @@ app.use(helmet({
       },
     },
 }));
+
 app.use(cookieParser());
 
 app.use(rateLimit({
@@ -77,8 +80,9 @@ app.use(useAuthentication);
 // Endpoints/Handlers
 
 // Endpoint: `/`
-app.use("/users", userRouter);
+app.use("/users", usersRouter);
 app.use("/auth", authnRouter);
+app.use("/cards", cardsRouter);
 app.use("/", rootRouter); // exampleMiddleware -> /[users, auth, ...]
 
 
